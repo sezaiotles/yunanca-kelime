@@ -1,0 +1,681 @@
+﻿<div id="yunanca-app-root">
+    <style>
+        #yunanca-app-root {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 5px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-sizing: border-box;
+            width: 100%;
+        }
+
+        #yunanca-app-root h1 {
+            color: #333;
+            margin: 0 0 10px 0;
+            font-size: 20px;
+            text-align: center;
+        }
+
+        #yunanca-app-root .dashboard-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        @media (max-width: 1100px) {
+            #yunanca-app-root .dashboard-container {
+                grid-template-columns: 1fr;
+                justify-items: center;
+            }
+        }
+
+        #yunanca-app-root .panel {
+            background: white;
+            padding: 12px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box;
+            width: 100%;
+        }
+
+        #yunanca-app-root .panel h3 {
+            margin-top: 0;
+            font-size: 14px;
+            color: #333;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 6px;
+            margin-bottom: 8px;
+        }
+
+        #yunanca-app-root .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-top: 5px;
+            position: relative;
+        }
+
+        #yunanca-app-root .form-group input {
+            padding: 7px 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 13px;
+            box-sizing: border-box;
+            width: 100%;
+        }
+
+        #yunanca-app-root .suggestions-box {
+            position: absolute;
+            top: 36px;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            z-index: 10;
+            max-height: 100px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        #yunanca-app-root .suggestion-item {
+            padding: 6px 10px;
+            font-size: 13px;
+            cursor: pointer;
+            border-bottom: 1px solid #f1f3f5;
+            color: #333;
+        }
+
+        #yunanca-app-root .suggestion-item:hover {
+            background-color: #e7f5ff;
+            color: #1c7ed6;
+        }
+
+        #yunanca-app-root .btn-add, 
+        #yunanca-app-root .btn-check,
+        #yunanca-app-root .btn-skip {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 7px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 13px;
+            margin-top: 3px;
+        }
+
+        #yunanca-app-root .btn-skip {
+            background-color: #ff9800;
+        }
+
+        #yunanca-app-root .card-section {
+            align-items: center;
+            text-align: center;
+        }
+
+        #yunanca-app-root .card-status {
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 8px;
+        }
+
+        #yunanca-app-root .card {
+            background: #fafafa;
+            border: 1px solid #eee;
+            width: 100%;
+            padding: 15px 10px;
+            border-radius: 8px;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+            user-select: none;
+        }
+
+        #yunanca-app-root .main-word {
+            font-size: 26px;
+            font-weight: bold;
+            color: #222;
+            margin-bottom: 6px;
+        }
+
+        #yunanca-app-root .sub-text {
+            font-size: 14px;
+            color: #555;
+            font-style: italic;
+            margin-bottom: 6px;
+        }
+
+        #yunanca-app-root .turkish-text {
+            font-size: 15px;
+            font-weight: bold;
+            color: #2E7D32;
+            margin-top: 10px;
+            border-top: 1px solid #eee;
+            padding-top: 10px;
+        }
+
+        #yunanca-app-root .card-buttons {
+            display: flex;
+            gap: 6px;
+            width: 100%;
+        }
+
+        #yunanca-app-root .btn {
+            padding: 8px 10px;
+            font-size: 13px;
+            font-weight: bold;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            color: white;
+            flex: 1;
+        }
+
+        #yunanca-app-root .btn-prev { background-color: #2196F3; }
+        #yunanca-app-root .btn-speak { background-color: #00897B; }
+        #yunanca-app-root .btn-next { background-color: #1E88E5; }
+
+        #yunanca-app-root .practice-target {
+            font-size: 16px;
+            font-weight: bold;
+            color: #1976D2;
+            margin: 6px 0;
+            text-align: center;
+        }
+        #yunanca-app-root .practice-result {
+            font-size: 13px;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 5px;
+            min-height: 18px;
+        }
+
+        #yunanca-app-root .virtual-keyboard {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 3px;
+            margin-top: 6px;
+        }
+        #yunanca-app-root .v-key {
+            background-color: #f1f3f5;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            padding: 4px 0;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+            color: #333;
+            user-select: none;
+        }
+        #yunanca-app-root .v-key:hover { background-color: #e2e6ea; }
+        #yunanca-app-root .v-key-action { background-color: #ffe3e3; color: #c92a2a; }
+        #yunanca-app-root .v-key-space { background-color: #e7f5ff; color: #1c7ed6; }
+
+        #yunanca-app-root .info-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11px;
+        }
+        #yunanca-app-root .info-table th, 
+        #yunanca-app-root .info-table td {
+            padding: 4px 6px;
+            border-bottom: 1px solid #eee;
+            text-align: left;
+        }
+        #yunanca-app-root .info-table th {
+            background-color: #f8f9fa;
+            color: #444;
+            font-weight: bold;
+        }
+        #yunanca-app-root .info-table tbody tr {
+            cursor: pointer;
+        }
+        #yunanca-app-root .info-table tr:hover {
+            background-color: #e0f2f1;
+        }
+    </style>
+
+    <h1>Yunanca Çalışma ve Kontrol Paneli</h1>
+
+    <div class="dashboard-container">
+        <!-- 1. BÖLÜM: Yeni Kelime Ekle -->
+        <div class="panel add-section">
+            <h3>➕ Yeni Kelime Ekle</h3>
+            <div class="form-group">
+                <input type="text" id="appNewTurkish" autocomplete="off" placeholder="Türkçe Anlamı">
+                <input type="text" id="appNewGreek" lang="el" placeholder="Yunanca Kelime">
+                <input type="text" id="appNewPronun" placeholder="Okunuşu (Örn: eho)">
+                <button class="btn-add" id="appBtnAdd">Kaydet</button>
+            </div>
+        </div>
+
+        <!-- 2. BÖLÜM: Kelime Kartları -->
+        <div class="panel card-section">
+            <div class="card-status" id="appCardStatus">Kart 1 / 4</div>
+            <div class="card">
+                <div class="main-word" id="appMainWord">έχω</div>
+                <div class="sub-text" id="appSubText">Okunuşu: eho</div>
+                <div class="turkish-text" id="appTurkishText">sahip olmak</div>
+            </div>
+            <div class="card-buttons">
+                <button class="btn btn-prev" id="appBtnPrev">Önceki</button>
+                <button class="btn btn-speak" id="appBtnSpeak">🔊 Dinle</button>
+                <button class="btn btn-next" id="appBtnNext">Sonraki</button>
+            </div>
+        </div>
+
+        <!-- 3. BÖLÜM: Yazarak Pratik / Sınav Modu -->
+        <div class="panel practice-panel">
+            <h3>✍️ Yazarak Pratik Yap</h3>
+            <div style="font-size: 11px; color: #666;">Sadece aşağıdaki Yunanca klavyeyi kullanın:</div>
+            <div class="practice-target" id="appPracticeTarget">sahip olmak</div>
+            <div class="form-group" style="margin-top: 3px;">
+                <input type="text" id="appPracticeInput" lang="el" placeholder="Sanal klavyeden yazın..." autocomplete="off">
+                <div class="suggestions-box" id="appSuggestionsBox"></div>
+
+                <div class="virtual-keyboard" id="appVirtualKeyboard">
+                    <button type="button" class="v-key" data-char="α">α</button>
+                    <button type="button" class="v-key" data-char="β">β</button>
+                    <button type="button" class="v-key" data-char="γ">γ</button>
+                    <button type="button" class="v-key" data-char="δ">δ</button>
+                    <button type="button" class="v-key" data-char="ε">ε</button>
+                    <button type="button" class="v-key" data-char="ζ">ζ</button>
+                    <button type="button" class="v-key" data-char="η">η</button>
+                    <button type="button" class="v-key" data-char="θ">θ</button>
+                    <button type="button" class="v-key" data-char="ι">ι</button>
+                    <button type="button" class="v-key" data-char="κ">κ</button>
+                    <button type="button" class="v-key" data-char="λ">λ</button>
+                    <button type="button" class="v-key" data-char="μ">μ</button>
+                    <button type="button" class="v-key" data-char="ν">ν</button>
+                    <button type="button" class="v-key" data-char="ξ">ξ</button>
+                    <button type="button" class="v-key" data-char="ο">ο</button>
+                    <button type="button" class="v-key" data-char="π">π</button>
+                    <button type="button" class="v-key" data-char="ρ">ρ</button>
+                    <button type="button" class="v-key" data-char="σ">σ</button>
+                    <button type="button" class="v-key" data-char="τ">τ</button>
+                    <button type="button" class="v-key" data-char="υ">υ</button>
+                    <button type="button" class="v-key" data-char="φ">φ</button>
+                    <button type="button" class="v-key" data-char="χ">χ</button>
+                    <button type="button" class="v-key" data-char="ψ">ψ</button>
+                    <button type="button" class="v-key" data-char="ω">ω</button>
+                    <button type="button" class="v-key v-key-space" data-char=" " style="grid-column: span 4;">Boşluk</button>
+                    <button type="button" class="v-key v-key-action" id="appKeyDelete" style="grid-column: span 4;">⌫ Sil</button>
+                </div>
+
+                <button class="btn-check" id="appBtnCheck">Kontrol Et</button>
+                <button class="btn-skip" id="appBtnSkip">⏭️ Sonraki / Pas Geç</button>
+            </div>
+            <div class="practice-result" id="appPracticeResult"></div>
+        </div>
+
+        <!-- 4. BÖLÜM: Günlük Rutin İşler -->
+        <div class="panel routine-panel">
+            <h3>🕒 Günlük Rutin <span style="font-size: 9px; font-weight: normal; color: #666; float: right;">(Tıkla: Dinle)</span></h3>
+            <div style="overflow-x: auto; max-height: 220px; overflow-y: auto;">
+                <table class="info-table" id="routineTable">
+                    <thead><tr><th>Saat / İfade</th><th>Okunuşu</th><th>Anlamı</th></tr></thead>
+                    <tbody>
+                        <tr data-speak="Ξυπνάω."><td><b>07:00 Ξυπνάω.</b></td><td>Ksipnao.</td><td>Uyanıyorum.</td></tr>
+                        <tr data-speak="Πλένομαι και ντύνομαι."><td><b>07:30 Πλένομαι</b></td><td>Plenome ke ntinome.</td><td>Yıkanıp giyiniyorum.</td></tr>
+                        <tr data-speak="Τρώω πρωινό."><td><b>08:00 Τρώω πρωινό.</b></td><td>Troo prino.</td><td>Kahvaltı yapıyorum.</td></tr>
+                        <tr data-speak="Πηγαινώ στη δουλειά."><td><b>08:30 Πηγαινώ</b></td><td>Pigeno sti dulya.</td><td>İşe gidiyorum.</td></tr>
+                        <tr data-speak="Δουλεύω."><td><b>09:00-17:00 Δουλεύω.</b></td><td>Dulevo.</td><td>Çalışıyorum.</td></tr>
+                        <tr data-speak="Τρώω μεσημεριανό."><td><b>13:30 Μεσημεριανό</b></td><td>Troo mesimeriano.</td><td>Öğle yemeği.</td></tr>
+                        <tr data-speak="Γυρίζω σπίτι."><td><b>17:30 Γυρίζω σπίτι.</b></td><td>Girizo spiti.</td><td>Eve dönüyorum.</td></tr>
+                        <tr data-speak="Τρώω βραδινό."><td><b>20:00 Βραδινό</b></td><td>Troo bradino.</td><td>Akşam yemeği.</td></tr>
+                        <tr data-speak="Ξεκουράζομαι ή βλέπω TV."><td><b>21:00 Dinlenme/TV</b></td><td>Ksekurazome i vlepo.</td><td>Dinlenme / TV.</td></tr>
+                        <tr data-speak="Κοιμάμαι."><td><b>23:00 Κοιμάμαι.</b></td><td>Kimame.</td><td>Uyuyorum.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 5. BÖLÜM: Günlük Konuşmalar -->
+        <div class="panel dialogue-panel">
+            <h3>💬 Günlük Konuşmalar <span style="font-size: 9px; font-weight: normal; color: #666; float: right;">(Tıkla: Dinle)</span></h3>
+            <div style="overflow-x: auto; max-height: 220px; overflow-y: auto;">
+                <table class="info-table" id="dialogueTable">
+                    <thead><tr><th>Yunanca</th><th>Okunuşu</th><th>Anlamı</th></tr></thead>
+                    <tbody>
+                        <tr data-speak="Καλημέρα"><td><b>Καλημέρα</b></td><td>Kalimera</td><td>Günaydın</td></tr>
+                        <tr data-speak="Καλησπέρα"><td><b>Καλησπέρα</b></td><td>Kalispera</td><td>İyi akşamlar</td></tr>
+                        <tr data-speak="Γεια σου"><td><b>Γεια σου</b></td><td>Ya su</td><td>Merhaba / Selam</td></tr>
+                        <tr data-speak="Τι κάνεις ;"><td><b>Τι κάνεις ;</b></td><td>Ti kanis?</td><td>Nasılsın?</td></tr>
+                        <tr data-speak="Καλά είμαι, ευχαριστώ."><td><b>Καλά είμαι, ευχαριστώ.</b></td><td>Kala ime, efharisto.</td><td>İyiyim, teşekkürler.</td></tr>
+                        <tr data-speak="Ευχαριστώ"><td><b>Ευχαριστώ</b></td><td>Efharisto</td><td>Teşekkürler</td></tr>
+                        <tr data-speak="Παρακαλώ"><td><b>Παρακαλώ</b></td><td>Parakalo</td><td>Rica ederim</td></tr>
+                        <tr data-speak="Ναι / Όχι"><td><b>Ναι / Όχι</b></td><td>Ne / Ohi</td><td>Evet / Hayır</td></tr>
+                        <tr data-speak="Τα λέμε!"><td><b>Τα λέμε!</b></td><td>Ta leme!</td><td>Görüşürüz!</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 6. BÖLÜM: Hava Durumu -->
+        <div class="panel weather-panel">
+            <h3>🌤️ Hava Durumu <span style="font-size: 9px; font-weight: normal; color: #666; float: right;">(Tıkla: Dinle)</span></h3>
+            <div style="overflow-x: auto; max-height: 220px; overflow-y: auto;">
+                <table class="info-table" id="weatherTable">
+                    <thead><tr><th>Cümle / İfade</th><th>Okunuşu</th><th>Anlamı</th></tr></thead>
+                    <tbody>
+                        <tr data-speak="Τι καιρό κάνει ;"><td><b>Τι καιρό κάνει ;</b></td><td>Ti kero kani?</td><td>Hava nasıl?</td></tr>
+                        <tr data-speak="Κάνει ζέστη."><td><b>Κάνει ζέστη.</b></td><td>Kani zesti.</td><td>Hava sıcak.</td></tr>
+                        <tr data-speak="Κάνει κρύο."><td><b>Κάνει κρύο.</b></td><td>Kani krio.</td><td>Hava soğuk.</td></tr>
+                        <tr data-speak="Έχει βροχή."><td><b>Έχει βροχή.</b></td><td>Ehi vrohi.</td><td>Yağmur var</td></tr>
+                        <tr data-speak="Έχει χιόνι."><td><b>Έχει χιόνι.</b></td><td>Ehi hioni.</td><td>Kar var</td></tr>
+                        <tr data-speak="Έχει ήλιο."><td><b>Έχει ήλιο.</b></td><td>Ehi ilio.</td><td>Güneş var</td></tr>
+                        <tr data-speak="Έχει συννεφιά."><td><b>Έχει συννεφιά.</b></td><td>Ehi sinefia.</td><td>Bulutlu</td></tr>
+                        <tr data-speak="Έχει αέρα."><td><b>Έχει αέρα.</b></td><td>Ehi aera.</td><td>Rüzgar var</td></tr>
+                        <tr data-speak="Έχει ομίχλη."><td><b>Έχει ομίχλη.</b></td><td>Ehi omihli.</td><td>Sis var</td></tr>
+                        <tr data-speak="Σήμερα"><td><b>Σήμερα</b></td><td>Simera</td><td>Bugün</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Supabase UMD Kütüphanesi -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <!-- Script Alanı -->
+    <script>
+        (function() {
+            // BURAYA KENDİ SUPABASE BİLGİLERİNİZİ YAZIN:
+            const SUPABASE_URL = 'https://rdajzsshvudzqdqiphth.supabase.co';
+            const SUPABASE_KEY = 'sb_publishable_3gDhKBCC20vIN_ps1AcvzA_EofqosiJ';
+
+            let supabaseClient = null;
+            if (window.supabase && SUPABASE_URL !== 'BURAYA_SUPABASE_URL_ADRESINIZI_YAZIN') {
+                supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+            }
+
+            const defaultCards = [
+                { greek: "είμαι", turkish: "olmak", pronunciation: "eime" },
+                { greek: "έχω", turkish: "sahip olmak", pronunciation: "eho" },
+                { greek: "θέλω", turkish: "istemek", pronunciation: "thelo" },
+                { greek: "κάνω", turkish: "yapmak", pronunciation: "kano" }
+            ];
+
+            let cards = [];
+            let currentIndex = 0;
+            let practiceIndex = 0;
+
+            function updateCard() {
+                if (cards.length === 0) return;
+                const card = cards[currentIndex];
+                document.getElementById("appCardStatus").innerText = `Kart ${currentIndex + 1} / ${cards.length}`;
+                document.getElementById("appMainWord").innerText = card.greek;
+                document.getElementById("appSubText").innerText = "Okunuşu: " + card.pronunciation;
+                document.getElementById("appTurkishText").innerText = card.turkish;
+            }
+
+            function nextCard() {
+                if (cards.length === 0) return;
+                currentIndex = (currentIndex + 1) % cards.length;
+                updateCard();
+            }
+
+            function prevCard() {
+                if (cards.length === 0) return;
+                currentIndex = (currentIndex - 1 + cards.length) % cards.length;
+                updateCard();
+            }
+
+            function speakText(text) {
+                if ('speechSynthesis' in window) {
+                    window.speechSynthesis.cancel();
+                    let utterance = new SpeechSynthesisUtterance(text);
+                    utterance.lang = 'el-GR';
+                    let voices = window.speechSynthesis.getVoices();
+                    let greekVoice = voices.find(v => v.lang.toLowerCase().includes('el'));
+                    if (greekVoice) {
+                        utterance.voice = greekVoice;
+                    }
+                    window.speechSynthesis.speak(utterance);
+                }
+            }
+
+            function speakWord() {
+                if (cards.length === 0) return;
+                speakText(cards[currentIndex].greek);
+            }
+
+            function loadPracticeCard() {
+                if (cards.length === 0) return;
+                practiceIndex = Math.floor(Math.random() * cards.length);
+                document.getElementById("appPracticeTarget").innerText = cards[practiceIndex].turkish;
+                document.getElementById("appPracticeInput").value = "";
+                document.getElementById("appPracticeResult").innerText = "";
+                hideSuggestions();
+            }
+
+            function normalizeGreek(str) {
+                return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+            }
+
+            function insertKey(char) {
+                const inputEl = document.getElementById("appPracticeInput");
+                inputEl.value += char;
+                handlePracticeInput(inputEl.value);
+                inputEl.focus();
+            }
+
+            function deleteKey() {
+                const inputEl = document.getElementById("appPracticeInput");
+                inputEl.value = inputEl.value.slice(0, -1);
+                handlePracticeInput(inputEl.value);
+                inputEl.focus();
+            }
+
+            function handlePracticeInput(val) {
+                const boxEl = document.getElementById("appSuggestionsBox");
+                if (!val) {
+                    hideSuggestions();
+                    return;
+                }
+                const normVal = normalizeGreek(val);
+                const matches = cards.filter(c => normalizeGreek(c.greek).startsWith(normVal));
+                if (matches.length === 0) {
+                    hideSuggestions();
+                    return;
+                }
+                boxEl.innerHTML = "";
+                matches.forEach(m => {
+                    const item = document.createElement("div");
+                    item.className = "suggestion-item";
+                    item.innerHTML = `<b>${m.greek}</b> <span style="font-size:11px; color:#666;">(${m.turkish})</span>`;
+                    item.onclick = function() {
+                        document.getElementById("appPracticeInput").value = m.greek;
+                        hideSuggestions();
+                    };
+                    boxEl.appendChild(item);
+                });
+                boxEl.style.display = "block";
+            }
+
+            function hideSuggestions() {
+                const boxEl = document.getElementById("appSuggestionsBox");
+                if(boxEl) {
+                    boxEl.style.display = "none";
+                    boxEl.innerHTML = "";
+                }
+            }
+
+            function checkPractice() {
+                if (cards.length === 0) return;
+                const userVal = document.getElementById("appPracticeInput").value.trim();
+                const correctVal = cards[practiceIndex].greek;
+                const resultEl = document.getElementById("appPracticeResult");
+                hideSuggestions();
+
+                if (userVal === correctVal || normalizeGreek(userVal) === normalizeGreek(correctVal)) {
+                    resultEl.style.color = "#2E7D32";
+                    resultEl.innerText = "🎉 Doğru!";
+                    speakText(correctVal);
+                    setTimeout(loadPracticeCard, 1500);
+                } else {
+                    resultEl.style.color = "#D32F2F";
+                    resultEl.innerText = `❌ Yanlış: ${correctVal}`;
+                }
+            }
+
+            function skipPractice() {
+                loadPracticeCard();
+            }
+
+            function handleTurkishInput(query) {
+                query = query.trim();
+                const greekInput = document.getElementById("appNewGreek");
+                const pronunInput = document.getElementById("appNewPronun");
+                
+                if (!query) {
+                    greekInput.value = "";
+                    pronunInput.value = "";
+                    return;
+                }
+
+                const found = cards.find(c => c.turkish.toLowerCase() === query.toLowerCase());
+                if (found) {
+                    greekInput.value = found.greek;
+                    pronunInput.value = found.pronunciation;
+                    return;
+                }
+
+                fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=tr&tl=el&dt=t&q=${encodeURIComponent(query)}`)
+                    .then(res => res.json())
+                    .then(dataGreek => {
+                        if (dataGreek && dataGreek[0] && dataGreek[0][0] && dataGreek[0][0][0]) {
+                            const translated = dataGreek[0][0][0];
+                            greekInput.value = translated;
+
+                            fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=el&tl=el-Latn&dt=t&q=${encodeURIComponent(translated)}`)
+                                .then(res => res.json())
+                                .then(dataPronun => {
+                                    if (dataPronun && dataPronun[0] && dataPronun[0][0] && dataPronun[0][0][0]) {
+                                        pronunInput.value = dataPronun[0][0][0].toLowerCase();
+                                    } else {
+                                        pronunInput.value = translated;
+                                    }
+                                });
+                        }
+                    }).catch(() => {});
+            }
+            async function addNewWord() {
+                const greekVal = document.getElementById("appNewGreek").value.trim();
+                const pronunVal = document.getElementById("appNewPronun").value.trim();
+                const turkishVal = document.getElementById("appNewTurkish").value.trim();
+
+                if (!greekVal || !turkishVal) {
+                    alert("Lütfen Türkçe ve Yunanca alanlarını doldurun!");
+                    return;
+                }
+
+                // Supabase tablonuzdaki sütun isimleriyle birebir eşleştirildi:
+                const newCard = { 
+                    yunanca: greekVal, 
+                    okunusu: pronunVal || greekVal, 
+                    anlami: turkishVal, // Supabase'deki Türkçe sütun adınız farklıysa burayı güncelleyebilirsiniz (örn: turkish)
+                    kategori: "Genel"  // Eğer kategori alanı boş bırakılamıyorsa hata vermemesi için eklendi
+                };
+
+                // Supabase'e Kaydetme
+                if (supabaseClient) {
+                    try {
+                        const { data, error } = await supabaseClient.from('kelimeler').insert([newCard]).select();
+                        if (error) {
+                            console.error("Supabase kayıt hatası:", error.message);
+                            alert("Kayıt yapılamadı: " + error.message);
+                        } else {
+                            console.error("Başarıyla kaydedildi:", data);
+                        }
+                    } catch (e) {
+                        console.error("Supabase bağlantı hatası:", e);
+                    }
+                }
+
+                // Listeyi ve arayüzü güncelle
+                cards.push({
+                    greek: greekVal,
+                    pronunciation: pronunVal || greekVal,
+                    turkish: turkishVal
+                });
+                
+                localStorage.setItem("yunancaCards", JSON.stringify(cards));
+
+                document.getElementById("appNewGreek").value = "";
+                document.getElementById("appNewPronun").value = "";
+                document.getElementById("appNewTurkish").value = "";
+
+                currentIndex = cards.length - 1;
+                updateCard();
+                loadPracticeCard();
+            }
+
+            
+
+            // Olay Bağlantıları
+            document.getElementById("appBtnAdd").addEventListener("click", addNewWord);
+            document.getElementById("appBtnPrev").addEventListener("click", prevCard);
+            document.getElementById("appBtnSpeak").addEventListener("click", speakWord);
+            document.getElementById("appBtnNext").addEventListener("click", nextCard);
+            document.getElementById("appBtnCheck").addEventListener("click", checkPractice);
+            document.getElementById("appBtnSkip").addEventListener("click", skipPractice);
+            document.getElementById("appKeyDelete").addEventListener("click", deleteKey);
+
+            document.getElementById("appNewTurkish").addEventListener("input", (e) => handleTurkishInput(e.target.value));
+            document.getElementById("appPracticeInput").addEventListener("input", (e) => handlePracticeInput(e.target.value));
+
+            // Sanal Klavye Tuşları
+            document.querySelectorAll("#appVirtualKeyboard .v-key[data-char]").forEach(btn => {
+                btn.addEventListener("click", () => insertKey(btn.getAttribute("data-char")));
+            });
+
+            // Tablo Satırlarına Ses Dinleme Bağlantısı
+            ["routineTable", "dialogueTable", "weatherTable"].forEach(tableId => {
+                const rows = document.querySelectorAll(`#${tableId} tbody tr`);
+                rows.forEach(row => {
+                    const text = row.getAttribute("data-speak");
+                    if (text) {
+                        row.addEventListener("click", () => speakText(text));
+                    }
+                });
+            });
+
+            // Verileri Supabase'den veya Yerel Hafızadan Yükle
+            async function initApp() {
+                let loadedFromSupabase = false;
+
+                if (supabaseClient) {
+                    try {
+                        const { data, error } = await supabaseClient.from('kelimeler').select('*');
+                        if (!error && data && data.length > 0) {
+                            cards = data;
+                            loadedFromSupabase = true;
+                        }
+                    } catch (e) {
+                        console.error("Supabase veri çekme hatası:", e);
+                    }
+                }
+
+                if (!loadedFromSupabase) {
+                    const saved = localStorage.getItem("yunancaCards");
+                    cards = saved ? JSON.parse(saved) : defaultCards;
+                }
+
+                updateCard();
+                loadPracticeCard();
+            }
+
+            initApp();
+        })();
+    </script>
+</div>
